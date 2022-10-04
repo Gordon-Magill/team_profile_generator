@@ -116,7 +116,7 @@ Team.prototype.addMember = (member) => {
 }
 
 // Generates page HTML
-function generateHTML() {
+function generateHTML(team) {
     return;
 }
 
@@ -131,7 +131,7 @@ function getTeamLead() {
 }
 
 // Return a promise for a team member
-function getTeamMember() {
+function getEngineer() {
     const teamMember = inquirer.prompt(memberQuestions).then((answers) => {
         const {memberName, memberID, memberGitName} = answers;
         const member = new TeamMember(memberName,memberID,memberGitName);
@@ -141,9 +141,10 @@ function getTeamMember() {
 }
 
 Team.prototype.selectOption = () => {
-
-    teamMember = getTeamMember()
-}
+    inquirer.prompt(menuQuestions).then((answers)=>{
+        return answers.selectedOption        
+    })
+};
 
 // Function to initialize the program
 function init() {
@@ -151,12 +152,28 @@ function init() {
     // Get the team lead
     teamLead = getTeamLead()
     team = new Team(teamLead);
-    team.selectOption()
-    
-    // Get the rest of the team
-    
+    let continueFlag = true;
 
-    return;
+    // Keep presenting options as long as the user hasn't quit
+
+    selected_option = team.selectOption()
+    Promise.all([selected_option]).then(() => {
+        switch (selected_option) {
+            case 'Add engineer':
+                team.addMember(getEngineer());
+                break;
+            case 'Add intern':
+                team.addMember(getIntern());
+                break;
+            case 'Quit':
+                continueFlag = false;
+                break;
+        }
+    })
+
+
+    // TODO do things with the final team roster
+    generateHTML(team)
 }
 
 // Initialize the program
