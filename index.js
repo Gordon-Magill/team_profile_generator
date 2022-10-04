@@ -1,180 +1,165 @@
-const inquirer = require('inquirer');
+const inquirer = require("inquirer");
 
-const memberQuestions = [
-    // Name, employee ID, github username
-    {
-        type:'input',
-        messsage:'Team member name:',
-        name:'memberName'
-    },
-    {
-        type:'input',
-        messsage:'Team member employee ID:',
-        name:'memberID'
-    },
-    {
-        type:'input',
-        messsage:'Team member github username:',
-        name:'memberGitName'
-    },
+// Questions to ask for an engineer
+const engineerQuestions = [
+  // Name, employee ID, github username
+  {
+    type: "input",
+    messsage: "Engineer name:",
+    name: "name",
+  },
+  {
+    type: "input",
+    messsage: "Engineer employee ID:",
+    name: "empID",
+  },
+  {
+    type: "input",
+    messsage: "Engineer github username:",
+    name: "engineerGit",
+  },
 ];
 
-const managerQuestions = [
-    // Name, employee ID, email, office number
-    {
-        type:'input',
-        messsage:'Team lead name:',
-        name:'leadName'
-    },
-    {
-        type:'input',
-        messsage:'Team lead employee ID:',
-        name:'leadEmpID'
-    },
-    {
-        type:'input',
-        messsage:'Team lead email:',
-        name:'leadEmail'
-    },
-    {
-        type:'input',
-        messsage:'Team lead office:',
-        name:'leadOffice'
-    }
+// Questions to ask for a team lead
+const leadQuestions = [
+  // Name, employee ID, email, office number
+  {
+    type: "input",
+    messsage: "Team lead name:",
+    name: "name",
+  },
+  {
+    type: "input",
+    messsage: "Team lead employee ID:",
+    name: "empID",
+  },
+  {
+    type: "input",
+    messsage: "Team lead email:",
+    name: "email",
+  },
+  {
+    type: "input",
+    messsage: "Team lead office:",
+    name: "leadOffice",
+  },
 ];
 
+// Questions to ask for an intern
 const internQuestions = [
-    // Name, employee ID, email, school
-    {
-        type:'input',
-        messsage:'Intern name:',
-        name:'internName'
-    },
-    {
-        type:'input',
-        messsage:'Intern employee ID:',
-        name:'internID'
-    },
-    {
-        type:'input',
-        messsage:'Intern email:',
-        name:'internEmail'
-    },
-    {
-        type:'input',
-        messsage:'Intern school:',
-        name:'internSchool'
-    },
-
+  // Name, employee ID, email, school
+  {
+    type: "input",
+    messsage: "Intern name:",
+    name: "name",
+  },
+  {
+    type: "input",
+    messsage: "Intern employee ID:",
+    name: "empID",
+  },
+  {
+    type: "input",
+    messsage: "Intern email:",
+    name: "email",
+  },
+  {
+    type: "input",
+    messsage: "Intern school:",
+    name: "internSchool",
+  },
 ];
 
+// Questions for program main options
 const menuQuestions = [
-    {
-        type: 'list',
-        message: 'Select option:',
-        choices: ['Add engineer', 'Add intern', 'Exit'],
-        name: 'selectedOption'
-    },
+  {
+    type: "list",
+    message: "Select option:",
+    choices: ["Add engineer", "Add intern", "Exit"],
+    name: "selectedOption",
+  },
 ];
 
-
-// Object to represent a single team member
-function TeamMember(name,empID,gitName) {
+// Generic class of employee for common parameters
+class Employee {
+  constructor(name, id) {
     this.name = name;
-    this.empID = empID;
-    this.gitName = gitName;
-    return;
+    this.id = id;
+  }
 }
 
-// Object to represent a team lead
-function TeamLead(name,empID,email,office) {
-    this.name = name;
-    this.empID = empID;
-    this.email = email;
-    this.office = office;
-    return;
-};
-
-// Object to represent an intern
-function Intern(name,empID,email,school) {
-    this.name = name;
-    this.empID = empID;
+// Intern gets additional email and school info
+class Intern extends Employee {
+  constructor(name, id, email, school) {
+    super(name, id);
     this.email = email;
     this.school = school;
-    return;
+  }
 }
 
-// Team is composed of a team lead and optional members
-function Team(teamLead,...members) {
-    this.teamLead = teamLead;
-    this.members = [...members];
+// Engineer gets additional github info
+class Engineer extends Employee {
+  constructor(name, id, gitName) {
+    super(name, id);
+    this.gitName = gitName;
+  }
 }
 
-// Adding a team member simply mutates the list
-Team.prototype.addMember = (member) => {
-    this.members.push(member);
+// TeamLead gets additional email and office number
+class TeamLead extends Employee {
+  constructor(name, id, email, office) {
+    super(name, id);
+    this.email = email;
+    this.office = office;
+  }
 }
 
-// Generates page HTML
-function generateHTML(team) {
-    return;
-}
+// The main object to handle team composition
+class Team {
+  constructor() {
+    this.teamLead = null;
+    this.teamRoster = [];
+    this.exitFlag = false;
+  }
 
-// Return a promise for a team lead
-function getTeamLead() {
-    const teamLead = inquirer.prompt(managerQuestions).then((answers) => {
-        const {leadName, leadEmpId, leadEmail, leadOffice} = answers;
-        const lead = new TeamLead(leadName,leadEmpId,leadEmail,leadOffice);
-        return lead;
+  addLead() {
+    inquirer.prompt(leadQuestions).then((answers) => {
+      this.teamLead = answers;
     });
-    return teamLead;
-}
+  }
 
-// Return a promise for a team member
-function getEngineer() {
-    const teamMember = inquirer.prompt(memberQuestions).then((answers) => {
-        const {memberName, memberID, memberGitName} = answers;
-        const member = new TeamMember(memberName,memberID,memberGitName);
-        return member;
+  addEmployee(employeeType) {
+    let questions;
+    let empType;
+
+    switch (employeeType) {
+      case "Engineer":
+        questions = engineerQuestions;
+        break;
+      case "Intern":
+        questions = internQuestions;
+        break;
+    }
+
+    inquirer.prompt(questions).then((answers) => {
+      answers.type = employeeType;
+      this.teamRoster.push(answers);
     });
-    return teamMember
+  }
+
+  chooseOption() {
+    inquirer.prompt(menuQuestions).then((answers) => {
+      switch (answers.selectedOption) {
+        case "Add engineer":
+          this.addEmployee("Engineer");
+          break;
+        case "Add intern":
+          this.addEmployee("Intern");
+          break;
+        case "Exit":
+          this.exitFlag = true;
+          break;
+      }
+    });
+  }
 }
-
-Team.prototype.selectOption = () => {
-    inquirer.prompt(menuQuestions).then((answers)=>{
-        return answers.selectedOption        
-    })
-};
-
-// Function to initialize the program
-function init() {
-
-    // Get the team lead
-    teamLead = getTeamLead()
-    team = new Team(teamLead);
-    let continueFlag = true;
-
-    // Keep presenting options as long as the user hasn't quit
-
-    selected_option = team.selectOption()
-    Promise.all([selected_option]).then(() => {
-        switch (selected_option) {
-            case 'Add engineer':
-                team.addMember(getEngineer());
-                break;
-            case 'Add intern':
-                team.addMember(getIntern());
-                break;
-            case 'Quit':
-                continueFlag = false;
-                break;
-        }
-    })
-
-
-    // TODO do things with the final team roster
-    generateHTML(team)
-}
-
-// Initialize the program
-init();
