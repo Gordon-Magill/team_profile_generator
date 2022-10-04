@@ -122,9 +122,13 @@ class Team {
     this.exitFlag = false;
   }
 
-  addLead() {
+  //   First thing will be to get the mandatory team lead information
+  beginQuestions() {
     inquirer.prompt(leadQuestions).then((answers) => {
       this.teamLead = answers;
+
+      //   After lead information has been gained, need to select an option
+      this.chooseOption();
     });
   }
 
@@ -141,25 +145,60 @@ class Team {
         break;
     }
 
-    inquirer.prompt(questions).then((answers) => {
+    const employee = inquirer.prompt(questions).then((answers) => {
       answers.type = employeeType;
       this.teamRoster.push(answers);
     });
+
+    return employee;
   }
 
+  //   Allows user to select whether to add an intern, an engineer, or stop
   chooseOption() {
-    inquirer.prompt(menuQuestions).then((answers) => {
+    const option = inquirer.prompt(menuQuestions).then((answers) => {
+      let employee;
       switch (answers.selectedOption) {
         case "Add engineer":
-          this.addEmployee("Engineer");
+          console.log("\nAdd information about engineer:");
+          // Add the engineer and then ask again
+          this.addEmployee("Engineer").then(() => {
+            this.chooseOption();
+          });
           break;
         case "Add intern":
-          this.addEmployee("Intern");
+          console.log("\nAdd information about intern:");
+          // Add the intern and then ask again
+          this.addEmployee("Intern").then(() => {
+            this.chooseOption();
+          });
           break;
         case "Exit":
           this.exitFlag = true;
+          console.log(this);
+          console.log('Done with questions, generating HTML...')
+          this.generateHTML()
           break;
       }
     });
+
+    return option;
+  }
+
+  // Generates HTML from a given team roster
+  generateHTML() {
+    console.log('generateHTML was called')
+
   }
 }
+
+
+
+// Orchestrates control flow for program
+function init() {
+  const newTeam = new Team();
+  console.log("Welcome! Enter information about the team lead");
+  newTeam.beginQuestions();
+}
+
+// Initiates program
+init();
