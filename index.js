@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const fs = require('fs');
 
 // Questions to ask for an engineer
 const engineerQuestions = [
@@ -184,9 +185,140 @@ class Team {
     return option;
   }
 
+//   Generates HTML to describe the card of a single team member
+  generateCards() {
+    return;
+  }
+
   // Generates HTML from a given team roster
   generateHTML() {
     console.log('generateHTML was called')
+    leadCard = `<!-- Team Lead -->
+    <div class="card">
+      <div class="image">
+        <img src="./assets/images/teamLead.jpeg" />
+      </div>
+      <div class="content">
+        <div class="header">${this.teamLead.name}</div>
+        <div class="meta">
+          <a>Team Lead</a>
+        </div>
+        <div class="description">
+            <!-- // Name, employee ID, email, office number -->
+          <ul>
+            <li>Employee ID: ${this.teamLead.empID}</li>
+            <li>Email: ${this.teamLead.email}</li>
+            <li>Office: ${this.teamLead.office}</li>
+          </ul>
+        </div>
+      </div>
+    </div>`
+
+    const employeeCards = this.teamRoster.map((employee) => {
+        let employeeHTML;
+        switch (employee.empType) {
+            case 'Engineer':
+                employeeHTML = `<!-- Sample Engineer -->
+                <div class="card">
+                  <div class="image">
+                    <img
+                      src="./assets/images/engineer.jpeg"
+                    />
+                  </div>
+                  <div class="content">
+                    <div class="header">${employee.name}</div>
+                    <div class="meta">
+                      <a>Engineer</a>
+                    </div>
+                    <div class="description">
+                        <!-- // Name, employee ID, github username -->
+    
+                      <ul>
+                        <li>Employee ID: ${employee.empID}</li>
+                        <li>Github: <a href="https://github.com/${employee.gitName}">${employee.gitName}</a></li>
+    
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+    `;
+                break;
+            case 'Intern':
+                employeeHTML = `<!-- Sample Intern -->
+                <div class="card">
+                  <div class="image">
+                    <img
+                      src="./assets/images/intern.jpeg"
+                    />
+                  </div>
+                  <div class="content">
+                    <div class="header">${employee.name}</div>
+                    <div class="meta">
+                      <a>Intern</a>
+                    </div>
+                    <div class="description">
+                        <!-- // Name, employee ID, email, school -->
+                        <ul>
+                            <li>Employee ID: ${employee.empID}</li>
+                            <li>Email: ${employee.email}</li>
+                            <li>School: ${employee.school}</li>
+    
+                        </ul>
+                    </div>
+                  </div>
+                </div>`;
+                break;
+        }
+    })
+
+
+    htmlContent = `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Team Roster</title>
+    
+        <!-- Semantic UI -->
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
+        />
+    
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="./assets/style/index.css" />
+      </head>
+      <body>
+        <div class="ui container">
+          <div class="ui equal width grid" id="cardContainer">
+            <div class="row">Team:</div>
+            <div class="row">
+              <div class="ui link cards" id="members">
+              
+                ${leadCard}
+
+                ${employeeCards}
+    
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <!-- jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+        <!-- Semantic UI -->
+        <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    
+        <!-- Custom JS -->
+        <script src="./assets/js/indexHTML.js"></script>
+      </body>
+    </html>
+    `
+
+
+    fs.writeFile('./index2.html',)
 
   }
 }
