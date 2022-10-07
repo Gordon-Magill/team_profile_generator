@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const fs = require('fs');
+const fs = require("fs");
 
 // Questions to ask for an engineer
 const engineerQuestions = [
@@ -176,8 +176,8 @@ class Team {
         case "Exit":
           this.exitFlag = true;
           console.log(this);
-          console.log('Done with questions, generating HTML...')
-          this.generateHTML()
+          console.log("Done with questions, generating HTML...");
+          this.generateHTML();
           break;
       }
     });
@@ -185,15 +185,15 @@ class Team {
     return option;
   }
 
-//   Generates HTML to describe the card of a single team member
-  generateCards() {
-    return;
-  }
+  //   Generates HTML to describe the card of a single team member
+  // generateCards() {
+  //   return;
+  // }
 
   // Generates HTML from a given team roster
   generateHTML() {
-    console.log('generateHTML was called')
-    leadCard = `<!-- Team Lead -->
+    console.log("generateHTML was called");
+    let leadCard = `<!-- Team Lead -->
     <div class="card">
       <div class="image">
         <img src="./assets/images/teamLead.jpeg" />
@@ -212,13 +212,13 @@ class Team {
           </ul>
         </div>
       </div>
-    </div>`
+    </div>`;
 
     const employeeCards = this.teamRoster.map((employee) => {
-        let employeeHTML;
-        switch (employee.empType) {
-            case 'Engineer':
-                employeeHTML = `<!-- Sample Engineer -->
+      let employeeHTML;
+      switch (employee.type) {
+        case "Engineer":
+          employeeHTML = `<!-- Sample Engineer -->
                 <div class="card">
                   <div class="image">
                     <img
@@ -242,9 +242,9 @@ class Team {
                   </div>
                 </div>
     `;
-                break;
-            case 'Intern':
-                employeeHTML = `<!-- Sample Intern -->
+          break;
+        case "Intern":
+          employeeHTML = `<!-- Sample Intern -->
                 <div class="card">
                   <div class="image">
                     <img
@@ -267,12 +267,13 @@ class Team {
                     </div>
                   </div>
                 </div>`;
-                break;
-        }
-    })
+          break;
+      }
+      console.log(`generateHTML has generated this for employeeHTML: ${employeeHTML}`)
+      return employeeHTML;
+    });
 
-
-    htmlContent = `<!DOCTYPE html>
+    let htmlContent = `<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8" />
@@ -315,15 +316,13 @@ class Team {
         <script src="./assets/js/indexHTML.js"></script>
       </body>
     </html>
-    `
+    `;
 
-
-    fs.writeFile('./index2.html',)
-
+    fs.writeFile("./index2.html", htmlContent, (err) =>
+      err ? console.error(err) : console.log("Success!")
+    );
   }
 }
-
-
 
 // Orchestrates control flow for program
 function init() {
