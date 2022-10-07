@@ -208,7 +208,7 @@ class Team {
           <ul>
             <li>Employee ID: ${this.teamLead.empID}</li>
             <li>Email: ${this.teamLead.email}</li>
-            <li>Office: ${this.teamLead.office}</li>
+            <li>Office: ${this.teamLead.leadOffice}</li>
           </ul>
         </div>
       </div>
@@ -235,7 +235,7 @@ class Team {
     
                       <ul>
                         <li>Employee ID: ${employee.empID}</li>
-                        <li>Github: <a href="https://github.com/${employee.gitName}">${employee.gitName}</a></li>
+                        <li>Github: <a href="https://github.com/${employee.engineerGit}">${employee.engineerGit}</a></li>
     
                       </ul>
                     </div>
@@ -261,7 +261,7 @@ class Team {
                         <ul>
                             <li>Employee ID: ${employee.empID}</li>
                             <li>Email: ${employee.email}</li>
-                            <li>School: ${employee.school}</li>
+                            <li>School: ${employee.internSchool}</li>
     
                         </ul>
                     </div>
@@ -269,7 +269,9 @@ class Team {
                 </div>`;
           break;
       }
-      console.log(`generateHTML has generated this for employeeHTML: ${employeeHTML}`)
+      console.log(
+        `generateHTML has generated this for employeeHTML: ${employeeHTML}`
+      );
       return employeeHTML;
     });
 
@@ -293,13 +295,13 @@ class Team {
       <body>
         <div class="ui container">
           <div class="ui equal width grid" id="cardContainer">
-            <div class="row">Team:</div>
-            <div class="row">
-              <div class="ui link cards" id="members">
-              
+            <div class="ui centered row" id="teamHeader">The team:</div>
+            <div class="ui centered row" id="membersRow">
+            <div class="ui link centered cards" id="members">
+                
                 ${leadCard}
 
-                ${employeeCards}
+                ${employeeCards.join('')}
     
               </div>
             </div>
