@@ -16,6 +16,12 @@ const engineerQuestions = [
   },
   {
     type: "input",
+    messsage: "Engineer email:",
+    name: "email",
+  },
+
+  {
+    type: "input",
     messsage: "Engineer github username:",
     name: "engineerGit",
   },
@@ -83,35 +89,70 @@ const menuQuestions = [
 
 // Generic class of employee for common parameters
 class Employee {
-  constructor(name, id) {
+  constructor(name, id, email) {
     this.name = name;
     this.id = id;
+    this.email = email;
+    this.type = null;
+  }
+
+  setType(type) {
+    this.type = type;
+  }
+
+  getType() {
+    return this.type;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  getID() {
+    return this.id;
+  }
+
+  getEmail() {
+    return this.email;
   }
 }
 
 // Intern gets additional email and school info
 class Intern extends Employee {
   constructor(name, id, email, school) {
-    super(name, id);
-    this.email = email;
+    super(name, id, email);
     this.school = school;
+    this.type = "Intern";
+  }
+
+  getSchool() {
+    return this.school;
   }
 }
 
 // Engineer gets additional github info
 class Engineer extends Employee {
-  constructor(name, id, gitName) {
-    super(name, id);
+  constructor(name, id, email, gitName) {
+    super(name, id, email);
     this.gitName = gitName;
+    this.type = "Engineer";
+  }
+
+  getGit() {
+    return this.gitName;
   }
 }
 
 // TeamLead gets additional email and office number
 class TeamLead extends Employee {
   constructor(name, id, email, office) {
-    super(name, id);
-    this.email = email;
+    super(name, id, email);
     this.office = office;
+    this.type = "Team Lead";
+  }
+
+  getOffice() {
+    return this.office;
   }
 }
 
@@ -123,10 +164,20 @@ class Team {
     this.exitFlag = false;
   }
 
+  getTeamLead() {
+    return this.teamLead;
+  }
+
+  getTeamRoster() {
+    return this.teamRoster;
+  }
+
   //   First thing will be to get the mandatory team lead information
   beginQuestions() {
     inquirer.prompt(leadQuestions).then((answers) => {
-      this.teamLead = answers;
+      const { name, empID, email, leadOffice } = answers;
+      const teamLead = new TeamLead(name, empID, email, leadOffice);
+      this.teamLead = teamLead;
 
       //   After lead information has been gained, need to select an option
       this.chooseOption();
@@ -134,8 +185,8 @@ class Team {
   }
 
   addEmployee(employeeType) {
-    let questions;
-    let empType;
+    let questions = null;
+    let newEmployee = null;
 
     switch (employeeType) {
       case "Engineer":
@@ -147,8 +198,20 @@ class Team {
     }
 
     const employee = inquirer.prompt(questions).then((answers) => {
-      answers.type = employeeType;
-      this.teamRoster.push(answers);
+      switch (employeeType) {
+        case "Engineer":
+          let { engName, engId, engEmail, engGit } = answers;
+          newEmployee = new Engineer(engName, engId, engEmail, engGit);
+          break;
+        case "Intern":
+          let { empName, empId, empEmail, empSchool } = answers;
+          newEmployee = new Intern(empName, empId, empEmail, empSchool);
+          break;
+      }
+
+      this.teamRoster.push(newEmployee);
+
+      return newEmployee;
     });
 
     return employee;
@@ -199,16 +262,16 @@ class Team {
         <img src="./assets/images/teamLead.jpeg" />
       </div>
       <div class="content">
-        <div class="header">${this.teamLead.name}</div>
+        <div class="header">${this.getTeamLead().name}</div>
         <div class="meta">
           <a>Team Lead</a>
         </div>
         <div class="description">
             <!-- // Name, employee ID, email, office number -->
           <ul>
-            <li>Employee ID: ${this.teamLead.empID}</li>
-            <li>Email: ${this.teamLead.email}</li>
-            <li>Office: ${this.teamLead.leadOffice}</li>
+            <li>Employee ID: ${this.getTeamLead().getID()}</li>
+            <li>Email: <a href="mailto:${this.getTeamLead().getEmail()}">${this.getTeamLead().getEmail()}</a></li>
+            <li>Office: ${this.getTeamLead().getOffice()}</li>
           </ul>
         </div>
       </div>
@@ -216,7 +279,7 @@ class Team {
 
     const employeeCards = this.teamRoster.map((employee) => {
       let employeeHTML;
-      switch (employee.type) {
+      switch (employee.getType()) {
         case "Engineer":
           employeeHTML = `<!-- Sample Engineer -->
                 <div class="card">
@@ -226,7 +289,7 @@ class Team {
                     />
                   </div>
                   <div class="content">
-                    <div class="header">${employee.name}</div>
+                    <div class="header">${employee.getName()}</div>
                     <div class="meta">
                       <a>Engineer</a>
                     </div>
@@ -234,8 +297,9 @@ class Team {
                         <!-- // Name, employee ID, github username -->
     
                       <ul>
-                        <li>Employee ID: ${employee.empID}</li>
-                        <li>Github: <a href="https://github.com/${employee.engineerGit}">${employee.engineerGit}</a></li>
+                        <li>Employee ID: ${employee.getID()}</li>
+                        <li>Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a></li>
+                        <li>Github: <a href="https://github.com/${employee.getGit()}">${employee.getGit()}</a></li>
     
                       </ul>
                     </div>
@@ -252,16 +316,16 @@ class Team {
                     />
                   </div>
                   <div class="content">
-                    <div class="header">${employee.name}</div>
+                    <div class="header">${employee.getName()}</div>
                     <div class="meta">
                       <a>Intern</a>
                     </div>
                     <div class="description">
                         <!-- // Name, employee ID, email, school -->
                         <ul>
-                            <li>Employee ID: ${employee.empID}</li>
-                            <li>Email: ${employee.email}</li>
-                            <li>School: ${employee.internSchool}</li>
+                            <li>Employee ID: ${employee.getID()}</li>
+                            <li>Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a></li>
+                            <li>School: ${employee.getSchool()}</li>
     
                         </ul>
                     </div>
@@ -301,7 +365,7 @@ class Team {
                 
                 ${leadCard}
 
-                ${employeeCards.join('')}
+                ${employeeCards.join("")}
     
               </div>
             </div>
@@ -320,9 +384,11 @@ class Team {
     </html>
     `;
 
-    fs.writeFile("./index2.html", htmlContent, (err) =>
-      err ? console.error(err) : console.log("Success!")
-    );
+    Promise.all([this.getTeamLead(), ...this.getTeamRoster()]).then(() => {
+      fs.writeFile("./index2.html", htmlContent, (err) =>
+        err ? console.error(err) : console.log("Success!")
+      );
+    });
   }
 }
 
