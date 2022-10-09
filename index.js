@@ -1,11 +1,11 @@
-
-const Team = require("./lib/Team");
+const {Team, } = require("./lib/Team.js");
 
 // Orchestrates control flow for program
 function init() {
-  const newTeam = new Team();
+  console.log(Team)
+  const team = new Team();
   console.log("Welcome! Enter information about the team lead");
-  newTeam.beginQuestions();
+  team.beginQuestions();
 }
 
 // Initiates program
