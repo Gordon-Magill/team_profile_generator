@@ -198,19 +198,16 @@ class Team {
     }
 
     const employee = inquirer.prompt(questions).then((answers) => {
-      switch (employeeType) {
-        case "Engineer":
-          let { engName, engId, engEmail, engGit } = answers;
-          newEmployee = new Engineer(engName, engId, engEmail, engGit);
-          break;
-        case "Intern":
-          let { empName, empId, empEmail, empSchool } = answers;
-          newEmployee = new Intern(empName, empId, empEmail, empSchool);
-          break;
+      console.log(answers)
+      let newEmployee;
+      if (employeeType==='Engineer') {
+        let { name, empID, email, engineerGit } = answers;
+        newEmployee = new Engineer(name, empID, email, engineerGit);
+      } else if (employeeType === 'Intern') {
+        let { name, empID, email, internSchool } = answers;
+        newEmployee = new Intern(name, empID, email, internSchool);
       }
-
       this.teamRoster.push(newEmployee);
-
       return newEmployee;
     });
 
@@ -277,8 +274,15 @@ class Team {
       </div>
     </div>`;
 
+    console.log(`
+    
+    About to generate employee cards using the roster:
+    ${() => this.getTeamRoster()}
+
+    `);
+
     const employeeCards = this.teamRoster.map((employee) => {
-      let employeeHTML;
+      let employeeHTML = null;
       switch (employee.getType()) {
         case "Engineer":
           employeeHTML = `<!-- Sample Engineer -->
@@ -334,11 +338,21 @@ class Team {
           break;
       }
       console.log(
-        `generateHTML has generated this for employeeHTML: ${employeeHTML}`
+        `
+
+        generateHTML has generated this for employeeHTML:
+        ${employeeHTML}
+
+        `
       );
       return employeeHTML;
     });
 
+    console.log(`About to call htmlcontent with:
+    -leadCard = 
+    ${leadCard}
+    -employeeCards = 
+    ${employeeCards.join("")}`);
     let htmlContent = `<!DOCTYPE html>
     <html lang="en">
       <head>
