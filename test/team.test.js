@@ -29,6 +29,7 @@ describe("Team", () => {
   });
 
   describe("beginQuestions", () => {
+
     it("Should trigger inquirer prompt to get manager information", () => {
       obj = new Team();
       inquirer.prompt.mockReturnValue(
@@ -46,15 +47,11 @@ describe("Team", () => {
       expect(inquirer.prompt).toHaveBeenLastCalledWith(managerQuestions);
     });
 
-    //     it("Should trigger a menu call after getting the manager information", () => {
-    //         obj = new Team()
-    //         const mock = jest.spyOn(obj, "chooseOption");
+    it("Should trigger a menu call after getting the manager information", () => {
+        obj = new Team()
 
-    //         mock.mockImplementation(() => {});
-    //         obj.beginQuestions();
 
-    //         expect(mock).toHaveBeenCalled()
-    //     });
+    });
   });
 
   describe("addEmployee", () => {
@@ -100,9 +97,7 @@ describe("Team", () => {
   describe("chooseOption", () => {
     it("Should trigger inquirer with menu questions", () => {
       const team = new Team();
-
-      // const mock = jest.spyOn(team, "addEmployee");
-      // mock.mockImplementation(() => {});
+      team.addEmployee = jest.fn();
 
       inquirer.prompt.mockReturnValue(
         new Promise(function (resolve) {
@@ -114,7 +109,7 @@ describe("Team", () => {
 
       team.chooseOption();
       expect(inquirer.prompt).toHaveBeenLastCalledWith(menuQuestions);
-      // expect(mock).toHaveBeenCalled()
+      expect(team.addEmployee).toHaveBeenCalledTimes(1)
     });
   });
 
