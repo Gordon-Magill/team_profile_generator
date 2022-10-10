@@ -155,7 +155,7 @@ describe("menuCycle", () => {
           });
         })
       )
-      // Third call emulates usage in chooseMenuOption in order to exit the loop
+      // Third call emulates usage in chooseMenuOption in order to exit the recursive loop
       .mockReturnValueOnce(
         new Promise(function (resolve) {
           resolve({

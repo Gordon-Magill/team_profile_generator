@@ -6,7 +6,7 @@ const inquirer = require("inquirer");
 
 // Questions to ask for an engineer
 const engineerQuestions = [
-  // Name, employee ID, github username
+  // Name, employee ID, email, github username
   {
     type: "input",
     messsage: "Engineer name:",
@@ -30,27 +30,27 @@ const engineerQuestions = [
   },
 ];
 
-// Questions to ask for a team lead
+// Questions to ask for a Manager
 const managerQuestions = [
   // Name, employee ID, email, office number
   {
     type: "input",
-    messsage: "Team lead name:",
+    messsage: "Manager name:",
     name: "name",
   },
   {
     type: "input",
-    messsage: "Team lead employee ID:",
+    messsage: "Manager employee ID:",
     name: "empID",
   },
   {
     type: "input",
-    messsage: "Team lead email:",
+    messsage: "Manager email:",
     name: "email",
   },
   {
     type: "input",
-    messsage: "Team lead office:",
+    messsage: "Manager office:",
     name: "officeNumber",
   },
 ];
@@ -91,7 +91,6 @@ const menuQuestions = [
 ];
 
 // Starts by asking the user for required manager information and return the Manager object
-// DONE
 async function getManagerInfo() {
   let managerInfo = await inquirer.prompt(managerQuestions);
   const { name, empID, email, officeNumber } = managerInfo;
@@ -99,12 +98,14 @@ async function getManagerInfo() {
   return manager;
 }
 
+// Prompt the user to select an action to perform on the team
 async function chooseMenuOption() {
   console.log("Please choose what to do:\n");
   let options = await inquirer.prompt(menuQuestions);
   return options.selectedOption;
 }
 
+// Repeatedly ask the user to add members to the team until they select the Exit option
 async function menuCycle(team) {
   let option = await chooseMenuOption();
   switch (option) {
@@ -126,6 +127,7 @@ async function menuCycle(team) {
   }
 }
 
+// Prompts the user for information needed to make an Engineer object
 async function getEngineer() {
   const engineerInfo = await inquirer.prompt(engineerQuestions);
   let { name, empID, email, engineerGit } = engineerInfo;
@@ -133,6 +135,7 @@ async function getEngineer() {
   return newEngineer;
 }
 
+// Prompts the user for information needed to make an Intern object
 async function getIntern() {
   const internInfo = await inquirer.prompt(internQuestions);
   let { name, empID, email, internSchool } = internInfo;
@@ -140,7 +143,9 @@ async function getIntern() {
   return newIntern;
 }
 
+// Takes a finalized team roster and generates the HTML for the final page
 function generateHTML(team) {
+  // Semantic UI card for a manager
   const managerCard = `<!-- Manager -->
       <div class="card">
         <div class="image">
@@ -162,6 +167,7 @@ function generateHTML(team) {
         </div>
       </div>`;
 
+  // Semantic UI cards for a Engineers and Interns
   const employeeCards = team.getTeamRoster().map((employee) => {
     let employeeHTML = null;
     switch (employee.getRole()) {
@@ -221,6 +227,7 @@ function generateHTML(team) {
     return employeeHTML;
   });
 
+  // Final page content, including cards for all employees added to the middle
   let htmlContent = `<!DOCTYPE html>
       <html lang="en">
         <head>

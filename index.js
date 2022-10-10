@@ -12,7 +12,7 @@ async function init() {
   const team = new Team();
 
   // Prompt the user for the manager information
-  console.log("Welcome! Enter information about the team lead");
+  console.log("Welcome! Enter information about the team manager");
   let manager = await getManagerInfo();
   team.setManager(manager);
 
@@ -20,8 +20,6 @@ async function init() {
 
   // Cycle through options to add members until the user selects 'Exit'
   await menuCycle(team);
-
-
 
   // Generate HTML content based on the final team composition
   htmlContent = generateHTML(team);
@@ -33,7 +31,6 @@ async function init() {
       ? console.log(err)
       : console.log(`HTML content written to ${filePath}`)
   });
-  console.log('Done.')
 };
 
 // Initiates program
