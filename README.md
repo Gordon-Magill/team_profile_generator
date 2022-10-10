@@ -19,11 +19,13 @@ A simple program for generating a webpage to highlight an engineering team based
 
 ## Installation
 
-Run 'npm i' in the repo working directory. The generated html output is ./dist/index.html
+Run 'npm i' in the repo working directory. 
 
 ## Usage
 
 Run 'node index' in the repo working directory.
+
+The generated html output is ./dist/index.html (prepopulated with an example file).
 
 Video demonstration:
 https://youtu.be/awb_wMAaNe8
