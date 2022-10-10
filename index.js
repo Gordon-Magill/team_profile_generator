@@ -21,7 +21,7 @@ async function init() {
   // Cycle through options to add members until the user selects 'Exit'
   await menuCycle(team);
 
-  console.log(`Done getting team info, generating HTML...`);
+
 
   // Generate HTML content based on the final team composition
   htmlContent = generateHTML(team);

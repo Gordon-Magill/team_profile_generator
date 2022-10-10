@@ -121,6 +121,7 @@ async function menuCycle(team) {
       await menuCycle(team);
       break;
     case "Exit":
+      console.log(`Done getting team info, generating HTML...`);
       break;
   }
 }
@@ -165,7 +166,7 @@ function generateHTML(team) {
     let employeeHTML = null;
     switch (employee.getRole()) {
       case "Engineer":
-        employeeHTML = `<!-- Sample Engineer -->
+        employeeHTML = `<!-- Engineer -->
                   <div class="card">
                     <div class="image">
                       <img
@@ -192,7 +193,7 @@ function generateHTML(team) {
       `;
         break;
       case "Intern":
-        employeeHTML = `<!-- Sample Intern -->
+        employeeHTML = `<!-- Intern -->
                   <div class="card">
                     <div class="image">
                       <img
