@@ -3,7 +3,9 @@
 
 ## Description
 
-A simple program for generating a webpage to highlight an engineering team based on CLI input. The user will be prompted for information on team members, and once done a 
+A simple program for generating a webpage to highlight an engineering team based on CLI input. The user will be prompted for information on team members, and once finalized will be directed to the saved location of the page HTML and CSS.
+
+![Example output](./assets/images/sampleOutput.png)
 
 ## Table of Contents
 
@@ -23,6 +25,8 @@ Run 'npm i' in the repo working directory. The generated html output is ./dist/i
 
 Run 'node index' in the repo working directory.
 
+Video demonstration:
+https://youtu.be/awb_wMAaNe8
 
 ## Tests
 
