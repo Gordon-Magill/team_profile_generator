@@ -1,70 +1,146 @@
-const {
-  Team,
-  managerQuestions,
-  engineerQuestions,
-  internQuestions,
-  menuQuestions,
-} = require("../lib/Team");
+const Team = require("../lib/Team");
 const Manager = require("../lib/Manager");
 const Intern = require("../lib/Intern");
-const Engineer = require('../lib/Engineer')
+const Engineer = require("../lib/Engineer");
 const inquirer = require("inquirer");
+
+// Questions to ask for an engineer
+const engineerQuestions = [
+  // Name, employee ID, github username
+  {
+    type: "input",
+    messsage: "Engineer name:",
+    name: "name",
+  },
+  {
+    type: "input",
+    messsage: "Engineer employee ID:",
+    name: "empID",
+  },
+  {
+    type: "input",
+    messsage: "Engineer email:",
+    name: "email",
+  },
+
+  {
+    type: "input",
+    messsage: "Engineer github username:",
+    name: "engineerGit",
+  },
+];
+
+// Questions to ask for a team lead
+const managerQuestions = [
+  // Name, employee ID, email, office number
+  {
+    type: "input",
+    messsage: "Team lead name:",
+    name: "name",
+  },
+  {
+    type: "input",
+    messsage: "Team lead employee ID:",
+    name: "empID",
+  },
+  {
+    type: "input",
+    messsage: "Team lead email:",
+    name: "email",
+  },
+  {
+    type: "input",
+    messsage: "Team lead office:",
+    name: "officeNumber",
+  },
+];
+
+// Questions to ask for an intern
+const internQuestions = [
+  // Name, employee ID, email, school
+  {
+    type: "input",
+    messsage: "Intern name:",
+    name: "name",
+  },
+  {
+    type: "input",
+    messsage: "Intern employee ID:",
+    name: "empID",
+  },
+  {
+    type: "input",
+    messsage: "Intern email:",
+    name: "email",
+  },
+  {
+    type: "input",
+    messsage: "Intern school:",
+    name: "internSchool",
+  },
+];
+
+// Questions for program main options
+const menuQuestions = [
+  {
+    type: "list",
+    message: "Select option:",
+    choices: ["Add engineer", "Add intern", "Exit"],
+    name: "selectedOption",
+  },
+];
 
 // Starts by asking the user for required manager information and return the Manager object
 // DONE
 async function getManagerInfo() {
-  let managerInfo = await inquirer.prompt(managerQuestions)
+  let managerInfo = await inquirer.prompt(managerQuestions);
   const { name, empID, email, officeNumber } = managerInfo;
   let manager = new Manager(name, empID, email, officeNumber);
   return manager;
 }
 
 async function chooseMenuOption() {
-    console.log('Please choose what to do:\n')
-  let userSelection = await inquirer.prompt(menuQuestions)
-  return userSelection.selectedOption;
+  console.log("Please choose what to do:\n");
+  let options = await inquirer.prompt(menuQuestions);
+  return options.selectedOption;
 }
 
 async function menuCycle(team) {
-    let option = await chooseMenuOption()
-    switch(option) {
-        case 'Add engineer':
-            let newEngineer = await getEngineer();
-            team.addMember(newEngineer)
-            console.log(`\nAdded engineer:
-            ${JSON.stringify(newEngineer)}
-            ...going back to the menu\n`)
-            await menuCycle(team)
-            break;
-        case 'Add intern':
-            let newIntern = await getIntern();
-            team.addMember(newIntern)
-            console.log(`\nAdded intern:
-            ${JSON.stringify(newIntern)}
-            ...going back to the menu\n`)
-            await menuCycle(team)
-            break;
-        case 'Exit':
-            break;
-    }
+  let option = await chooseMenuOption();
+  switch (option) {
+    case "Add engineer":
+      let newEngineer = await getEngineer();
+      team.addMember(newEngineer);
+      console.log(`\nAdded engineer, going back to the menu\n`);
+      await menuCycle(team);
+      break;
+    case "Add intern":
+      let newIntern = await getIntern();
+      team.addMember(newIntern);
+      console.log(`\nAdded intern, going back to the menu\n`);
+      await menuCycle(team);
+      break;
+    case "Exit":
+      break;
+  }
 }
 
 async function getEngineer() {
-    const engineerInfo = await inquirer.prompt(engineerQuestions)
-    let { name, empID, email, engineerGit } = engineerInfo;
-    let newEngineer = new Engineer(name, empID, email, engineerGit);
-    return newEngineer;
-};
+  const engineerInfo = await inquirer.prompt(engineerQuestions);
+  let { name, empID, email, engineerGit } = engineerInfo;
+  let newEngineer = new Engineer(name, empID, email, engineerGit);
+  return newEngineer;
+}
 
 async function getIntern() {
-    const internInfo = await inquirer.prompt(internQuestions)
-    let { name, empID, email, internSchool } = internInfo;
-    let newIntern = new Intern(name, empID, email, internSchool);
-    return newIntern;
-};
+  const internInfo = await inquirer.prompt(internQuestions);
+  let { name, empID, email, internSchool } = internInfo;
+  let newIntern = new Intern(name, empID, email, internSchool);
+  return newIntern;
+}
 
 function generateHTML(team) {
-    const managerCard = `<!-- Manager -->
+  const managerCard = `<!-- Manager -->
       <div class="card">
         <div class="image">
           <img src="../assets/images/manager.jpeg" />
@@ -85,11 +161,11 @@ function generateHTML(team) {
         </div>
       </div>`;
 
-    const employeeCards = team.getTeamRoster().map((employee) => {
-      let employeeHTML = null;
-      switch (employee.getRole()) {
-        case "Engineer":
-          employeeHTML = `<!-- Sample Engineer -->
+  const employeeCards = team.getTeamRoster().map((employee) => {
+    let employeeHTML = null;
+    switch (employee.getRole()) {
+      case "Engineer":
+        employeeHTML = `<!-- Sample Engineer -->
                   <div class="card">
                     <div class="image">
                       <img
@@ -114,9 +190,9 @@ function generateHTML(team) {
                     </div>
                   </div>
       `;
-          break;
-        case "Intern":
-          employeeHTML = `<!-- Sample Intern -->
+        break;
+      case "Intern":
+        employeeHTML = `<!-- Sample Intern -->
                   <div class="card">
                     <div class="image">
                       <img
@@ -139,12 +215,12 @@ function generateHTML(team) {
                       </div>
                     </div>
                   </div>`;
-          break;
-      }
-      return employeeHTML
-    });
+        break;
+    }
+    return employeeHTML;
+  });
 
-    let htmlContent = `<!DOCTYPE html>
+  let htmlContent = `<!DOCTYPE html>
       <html lang="en">
         <head>
           <meta charset="UTF-8" />
@@ -188,7 +264,7 @@ function generateHTML(team) {
         </body>
       </html>
       `;
-      return htmlContent;
+  return htmlContent;
 }
 
 module.exports = {
@@ -197,5 +273,5 @@ module.exports = {
   getEngineer,
   getIntern,
   menuCycle,
-  generateHTML
+  generateHTML,
 };

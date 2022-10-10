@@ -1,13 +1,10 @@
-const { Team } = require("./lib/Team.js");
+const Team = require("./lib/Team.js");
 const {
   getManagerInfo,
-  chooseMenuOption,
-  getEngineer,
-  getIntern,
   menuCycle,
   generateHTML,
 } = require("./src/helperFunctions.js");
-const fs = require('fs')
+const fs = require('fs');
 
 // Orchestrates control flow for program
 async function init() {
@@ -16,36 +13,28 @@ async function init() {
 
   // Prompt the user for the manager information
   console.log("Welcome! Enter information about the team lead");
-  let manager = await getManagerInfo()
-  team.setManager(manager)
+  let manager = await getManagerInfo();
+  team.setManager(manager);
 
-  // Confirm manager info (verbose)
-  // console.log(`\nAdded manager:
-  // ${JSON.stringify(team.getManager())}
-  // ...going back to the menu\n`)
-
-  // Confirm manager info (slim)
-  console.log(`\nAdded manager, going back to the menu\n`)
+  console.log(`\nAdded manager, going back to the menu\n`);
 
   // Cycle through options to add members until the user selects 'Exit'
-  await menuCycle(team)
+  await menuCycle(team);
 
-  console.log(`Done getting team info, generating HTML...`)
+  console.log(`Done getting team info, generating HTML...`);
 
+  // Generate HTML content based on the final team composition
   htmlContent = generateHTML(team);
 
+  // Write the team HTML content to the final file
   let filePath = './dist/index.html'
   fs.writeFile(filePath,htmlContent,(err) => {
     err 
       ? console.log(err)
       : console.log(`HTML content written to ${filePath}`)
-  })
-
-
-
-
-
-}
+  });
+  console.log('Done.')
+};
 
 // Initiates program
 init();
