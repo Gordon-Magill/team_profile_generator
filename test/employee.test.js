@@ -14,5 +14,12 @@ describe("Employee", () => {
             expect(obj.getEmail()).toEqual('tests@email.com')
             expect(obj.getRole()).toEqual('Employee')
         })
+
+        it('Should allow for resetting of roles', () => {
+            obj = new Employee("Employee's name", "id#123456", 'tests@email.com', 'test-gitName');
+            obj.setRole('New employee type')
+            expect(obj.role).toEqual('New employee type')
+
+        })
     })
 })
